@@ -1,0 +1,52 @@
+<div class="row margin-after nyvrs">
+    <h4 class="frame-title">{{msg('nyvrs.settings.title')}}</h4>
+    <form id="nyvrsSettingsForm" name="nyvrsSettingsForm" class="form-horizontal col-sm-12" novalidate>
+        <!--<div class="form-group">-->
+            <!--<label class="col-md-2 col-sm-3 control-label" for="ivrUrl">{{msg('nyvrs.settings.label.ivrUrl')}}:</label>-->
+            <!--<div class="col-md-10 col-sm-9">-->
+                <!--<input class="form-control input-xxlarge" ng-model="settings.ivrCallUrl" type="text" id="ivrUrl" required/>-->
+            <!--</div>-->
+        <!--</div>-->
+        <div class="form-group">
+            <label class="col-md-2 col-sm-3 control-label" for="sipName">{{msg('nyvrs.settings.label.sipName')}}:</label>
+            <div class="col-md-10 col-sm-9">
+                <input class="form-control input-large" ng-model="settings.asteriskSipName" type="text" id="sipName" required/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 col-sm-3 control-label" for="callDir">{{msg('nyvrs.settings.label.callDir')}}:</label>
+            <div class="col-md-10 col-sm-9">
+                <input class="form-control input-large" ng-model="settings.asteriskCallDir" type="text" id="callDir" required/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 col-sm-3 control-label" for="retryInterval">{{msg('nyvrs.settings.label.message.contextName')}}:</label>
+            <div class="col-md-10 col-sm-9">
+                <input class="form-control input-large" ng-model="settings.asteriskMessageContextName" type="text" id="messageContextName" required/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 col-sm-3 control-label" for="maxRetries">{{msg('nyvrs.settings.label.maxRetries')}}:</label>
+            <div class="col-md-10 col-sm-9">
+                <input class="form-control input-large" ng-model="settings.asteriskMaxRetries" type="text" id="maxRetries" required/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 col-sm-3 control-label" for="retryInterval">{{msg('nyvrs.settings.label.retryInterval')}}:</label>
+            <div class="col-md-10 col-sm-9">
+                <input class="form-control input-large" ng-model="settings.asteriskRetryInterval" type="text" id="retryInterval" required/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 col-sm-3 control-label" for="retryInterval">{{msg('nyvrs.settings.label.maxCalls')}}:</label>
+            <div class="col-md-10 col-sm-9">
+                <input class="form-control input-large" ng-model="settings.asteriskMaxCalls" type="text" id="maxCalls" required/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-sm -offset-3 col-md-10 col-sm-9">
+                <input ng-click="submit()" type="button" value="{{msg('nyvrs.settings.submit')}}" class="btn btn-primary"/>
+            </div>
+        </div>
+    </form>
+</div>

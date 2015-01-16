@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import org.motechproject.nyvrs.domain.CampaignType;
 
 @Controller
 @RequestMapping("/web-api")
@@ -72,6 +73,57 @@ public class RegistrationController {
             LOG.info("Client with callerId " + callerId + " is NOT registered in NYVRS");
             return new ResponseEntity<>("Client is not registered", HttpStatus.OK);
         }
+    }
+
+    @RequestMapping(value = "/updateny", method = RequestMethod.GET)
+    public ResponseEntity<String> nyUpdater(HttpServletRequest request) {
+        String callerId = request.getParameter("callerId");
+     
+        if (null == callerId) {
+            LOG.info("The request doesn't contain callerId parameter");
+            return new ResponseEntity<>("The request doesn't callerId parameter", HttpStatus.BAD_REQUEST);
+        } else {
+            ClientRegistration client = clientRegistrationService.findClientRegistrationByNumber(callerId);
+            if (null == client) {
+                LOG.info("Client with callerId " + callerId + " is NOT registered in NYVRS");
+                return new ResponseEntity<>("Client is not registered", HttpStatus.OK);
+            } else {
+                client.setNyWeeks(client.getNyWeeks()+1);
+                clientRegistrationService.update(client);
+                return new ResponseEntity<>("update successful", HttpStatus.OK);
+            }
+        }
+    }
+
+    @RequestMapping(value = "/getMsgToPlay", method = RequestMethod.GET)
+    public ResponseEntity<String> getPlayMsg(HttpServletRequest request) {
+        String callerId = request.getParameter("callerId");
+        String dayNo = request.getParameter("day");
+        if (null == callerId) {
+            LOG.info("The request doesn't contain callerId parameter");
+            return new ResponseEntity<>("The request doesn't callerId parameter", HttpStatus.BAD_REQUEST);
+        } else {
+            ClientRegistration client = clientRegistrationService.findClientRegistrationByNumber(callerId);
+            if (null == client) {
+                LOG.info("Client with callerId " + callerId + " is NOT registered in NYVRS");
+                return new ResponseEntity<>("Client is not registered", HttpStatus.OK);
+            } else {
+                int day = Integer.parseInt(dayNo);
+                if (day == 0) {
+                    return new ResponseEntity<>(String.format("Week%sStory%s", client.getNyWeeks(), client.getNyWeeks()), HttpStatus.OK);
+
+                } else if (day == 1) {
+                    int set = 3;
+                    if (client.getCampaignType().equals(CampaignType.KIKI)) {
+                        set = 1;
+                    } else if (client.getCampaignType().equals(CampaignType.RONALD)) {
+                        set = 2;
+                    }
+                    return new ResponseEntity<>(String.format("Set%dDay%dWeek%02d", set, day, client.getNyWeeks()), HttpStatus.OK);
+                }
+            }
+        }
+        return null;
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
