@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import org.motechproject.nyvrs.domain.CampaignType;
+import org.motechproject.nyvrs.domain.StatusType;
 
 @Service("clientRegistrationService")
 public class ClientRegistrationServiceImpl implements ClientRegistrationService {
@@ -32,11 +34,20 @@ public class ClientRegistrationServiceImpl implements ClientRegistrationService 
         LOG.info(String.format("Successfully saved client (with callerId=%s) to database",
                 savedClientRegistration.getNumber()));
 
-        campaignService.enrollToNyvrsCampaigns(
-                savedClientRegistration.getId().toString(), savedClientRegistration.getChannel());
-        LOG.info(String.format("Successfully enrolled client (with callerId=%s) for NYVRS campaigns",
-                savedClientRegistration.getNumber()));
+        enrollForCampaign(clientRegistration);
+//        campaignService.enrollToNyvrsCampaigns(
+//                savedClientRegistration.getId().toString(), savedClientRegistration.getChannel());
+//        LOG.info(String.format("Successfully enrolled client (with callerId=%s) for NYVRS campaigns",
+//                savedClientRegistration.getNumber()));
 
+    }
+
+    public void enrollForCampaign(CampaignType campaign, ClientRegistration client) {
+        campaignService.enrollToCampaigns(client.getId().toString(), campaign, client.getChannel());
+    }
+
+    public void enrollForCampaign(ClientRegistration client) {
+        campaignService.enrollToCampaigns(client);
     }
 
     @Override
@@ -62,5 +73,34 @@ public class ClientRegistrationServiceImpl implements ClientRegistrationService 
     @Override
     public ClientRegistration getById(Long clientRegistrationId) {
         return clientRegistrationDataService.findClientRegistrationById(clientRegistrationId);
+    }
+
+    @Override
+    public List<ClientRegistration> findByCampaignStatus(CampaignType type, StatusType status) {
+        return clientRegistrationDataService.findByCampaignStatus(type, status);
+    }
+
+    public List<ClientRegistration> findByCampaignStatus(CampaignType type, StatusType status, Integer nyWeeks) {
+        return clientRegistrationDataService.findByCampaignStatusWeek(type, status, nyWeeks);
+    }
+
+    @Override
+    public void unenroll(ClientRegistration client, String campsign) {
+        campaignService.unenrollToCampaigns(client, campsign);
+    }
+
+    @Override
+    public void deleteCampaign(String campaign) {
+        campaignService.deleteCampaign(campaign);
+    }
+
+    @Override
+    public List<ClientRegistration> findByCampaignStatusWeek(CampaignType type, StatusType status, Integer sz) {
+        return clientRegistrationDataService.findByCampaignStatusWeek(type, status, sz);
+    }
+
+    @Override
+    public List<ClientRegistration> findByCampaignStatusWeekAge(CampaignType type, StatusType status, Integer nyWeeks, Integer age) {
+        return clientRegistrationDataService.findByCampaignStatusWeekAge(type, status, nyWeeks, String.valueOf(age));
     }
 }

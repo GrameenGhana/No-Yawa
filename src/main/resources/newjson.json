@@ -1,0 +1,23 @@
+[
+    {
+        "name": "NYVRS SUNDAY IVR CAMPAIGN",
+        "type": "DAY_OF_WEEK",
+        "maxDuration": "26 weeks",
+        "messages": [
+            {
+                "name": "ALL_SUNDAY_IVR",
+                "formats": [
+                    "IVR"
+                ],
+                "languages": [
+                    "en",
+                    "twi",
+                    "ewe",
+                    "hau"
+                ],
+                "messageKey": "ALL_SUNDAY_IVR_MSG",
+                "repeatOn": ["Sunday"],
+                "startTime": "19:00"
+            }
+        ]
+    }]

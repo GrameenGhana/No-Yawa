@@ -53,11 +53,12 @@ public class MessageController {
         this.settingsFacade = settingsFacade;
     }
 
-    @RequestMapping(value = "/result", method = RequestMethod.POST)
+    @RequestMapping(value = "/result", method = {RequestMethod.POST, RequestMethod.GET})
     public ResponseEntity<String> result(HttpServletRequest request) {
         String callerId = request.getParameter("callerId");
         Boolean isSuccessful = Boolean.valueOf(request.getParameter("isSuccessful"));
 
+        System.out.println(String.format("Request Restful /result?callerId=%s&isSuccessful=%s", callerId, isSuccessful));
         if (StringUtils.isBlank(callerId) || isSuccessful == null) {
             return new ResponseEntity<String>("Missing parameters.", HttpStatus.OK);
         }

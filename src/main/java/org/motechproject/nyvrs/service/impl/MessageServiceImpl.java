@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+import org.motechproject.nyvrs.web.NYVRSUtil;
+import org.motechproject.nyvrs.web.domain.Language;
 
 /**
  * Implementation of the {@link org.motechproject.nyvrs.service.MessageService}
@@ -25,28 +27,28 @@ import java.util.Date;
  */
 @Service("messageService")
 public class MessageServiceImpl implements MessageService {
-    
+
     private static final Logger LOG = LoggerFactory.getLogger(MessageService.class);
-    
+
     private SettingsFacade settingsFacade;
-    
+
     @Autowired
     private ClientRegistrationService clientRegistrationService;
-    
+
     @Autowired
     private MessageRequestService messageRequestService;
-    
+
     @Autowired
     private SchedulerService schedulerService;
-    
+
     @Autowired
     public MessageServiceImpl(final SettingsFacade settingsFacade) {
         this.settingsFacade = settingsFacade;
     }
-    
+
     @Override
     public synchronized Boolean playMessage(MessageRequest messageRequest) {
-        
+
         String sipName = settingsFacade.getProperty(SettingsDto.ASTERISK_SIP_NAME);
         String maxRetries = settingsFacade.getProperty(SettingsDto.ASTERISK_MAX_RETRIES);
         String retryInterval = settingsFacade.getProperty(SettingsDto.ASTERISK_RETRY_INTERVAL);
@@ -56,22 +58,27 @@ public class MessageServiceImpl implements MessageService {
         if (client == null) {
             LOG.error("Could not find a client with caller id: " + callerId);
         } else {
-            String language = client.getLanguage();
+            String language = null == client.getLanguage() ? Language.ENGLISH.getValue() : client.getLanguage();
             // e.g. Set1Day0Week03
             String filename = String.format("Week%dStory%d", messageRequest.getWeek(), messageRequest.getWeek());
             /**
-             * 
+             * SetVar: filename=Week2Story2 SetVar: callerId=233277143521
+             * SetVar: language=ENGLISH CallerID: NY<0208799999>
              */
             String callContent = String.format("Channel: %s/%s\n"
                     + "MaxRetries: %s\n"
                     + "RetryTime: %s\n"
                     + "Context: %s\n"
-                    + "Extension: 12345\n"
-                    + "SetVar: CHANNEL(language)=%s\n"
-                    + "Data: %s\n"
-                    + "Application: Playback\n"
-                    + "CallerID: NoYawa <NOYAWA>\n"
-                  , sipName, "0" + callerId.substring(3), maxRetries, retryInterval, contextName, language.substring(0, 2).toLowerCase(), filename);
+                    + "Extension: s\n"
+                    + "SetVar: filename=%s\n"
+                    + "SetVar: callerId=%s\n"
+                    + "SetVar: language=%s"
+                    + "CallerID: NoYawa <NOYAWA>\n",
+                    sipName,
+                    "0" + callerId.substring(3).replaceAll(" ", ""),
+                    maxRetries,
+                    retryInterval,
+                    contextName, filename, callerId, language);
             LOG.error(String.format("Playing File %s for %s", filename, "0" + callerId.substring(3)));
             System.out.println((String.format("Playing File %s for %s", filename, "0" + callerId.substring(3))));
 //   String callContent = String.format("Channel: SIP/%s/%s\n" +
@@ -91,25 +98,26 @@ public class MessageServiceImpl implements MessageService {
                 File callFile = new File(callerId + ".call");
                 try {
                     LOG.error(String.format("Moving the call file to the outgoing directory (callerId: %s)", callerId));
+                    System.out.println(callContent);
                     FileUtils.writeStringToFile(callFile, callContent);
                     callFile.setReadable(true, false);
                     callFile.setExecutable(true, false);
                     callFile.setWritable(true, false);
                     callFile.setLastModified(new Date().getTime());
                     File callFileDest = new File(callDir, callerId + ".call");
-                    FileUtils.copyFile(callFile, new File("/var/spool/asterisk/",callerId+".call"));
+//                    FileUtils.copyFile(callFile, new File("/var/spool/asterisk/",callerId+".call"));
                     FileUtils.moveFile(callFile, callFileDest);
                     messageRequest.setStatus(MessageRequestStatus.IN_PROGRESS);
                     messageRequestService.update(messageRequest);
 //                    client.setNyWeeks(client.getNyWeeks()+1);
 //                    clientRegistrationService.update(client);
                     return true;
-                } catch (IOException ioe) {
+                } catch (Exception ioe) {
                     LOG.error("Error while saving the call file:\n" + ioe.getMessage());
                 }
             }
         }
         return false;
     }
-    
+
 }

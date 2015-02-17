@@ -39,6 +39,8 @@
 
     <osgi:reference id="messageRequestDataService"
                     interface="org.motechproject.nyvrs.repository.MessageRequestDataService" />
+                    <osgi:reference id="messageDataService"
+                    interface="org.motechproject.nyvrs.repository.MessageDataService" />
 
     <osgi:reference id="clientRegistrationDataService"
                     interface="org.motechproject.nyvrs.repository.ClientRegistrationDataService" />

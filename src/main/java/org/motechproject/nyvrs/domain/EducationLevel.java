@@ -1,4 +1,4 @@
-package org.motechproject.nyvrs.domain;
+    package org.motechproject.nyvrs.domain;
 
 
 public enum EducationLevel {

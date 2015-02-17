@@ -14,7 +14,10 @@ public class MessageRequest extends MdsEntity {
     private Integer week;
 
     @Field(required = true)
-    private Integer day;
+    private Integer day;   
+    
+    @Field(required = false,name="msg_file")
+    private String  msgFileName;
 
     @Field(required = true)
     private Integer retryCount;
@@ -68,5 +71,19 @@ public class MessageRequest extends MdsEntity {
 
     public void setStatus(MessageRequestStatus status) {
         this.status = status;
+    }
+
+    /**
+     * @return the msgFileName
+     */
+    public String getMsgFileName() {
+        return msgFileName;
+    }
+
+    /**
+     * @param msgFileName the msgFileName to set
+     */
+    public void setMsgFileName(String msgFileName) {
+        this.msgFileName = msgFileName;
     }
 }

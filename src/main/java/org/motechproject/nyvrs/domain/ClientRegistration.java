@@ -86,7 +86,32 @@ public class ClientRegistration extends MdsEntity {
         } else {
             campaignType = CampaignType.RONALD;
         }
-        this.status = StatusType.Incomplete;
+        this.status = StatusType.Completed;
+    }
+   public ClientRegistration(String number, String language, String gender, String age, EducationLevel educationLevel,
+                              ChannelType channel,String source,String region,String location) {
+        this.number = number;
+        this.language = language;
+        this.gender = gender;
+        this.age = age;
+        this.educationLevel = educationLevel;
+        this.channel = channel;
+        this.region = region;
+        this.source=source;
+        this.location=location;
+       
+
+        // Setting nyWeeks default value in constructor since MDS doesn't handle it properly
+        this.nyWeeks = 1;
+
+        if (Integer.parseInt(age) > 19) {
+            campaignType = CampaignType.RITA;
+        } else if (educationLevel == EducationLevel.NA) {
+            campaignType = CampaignType.KIKI;
+        } else {
+            campaignType = CampaignType.RONALD;
+        }
+        this.status = StatusType.Completed;
     }
 
     public ClientRegistration(String number, String gender, String age, EducationLevel educationLevel, String location,
