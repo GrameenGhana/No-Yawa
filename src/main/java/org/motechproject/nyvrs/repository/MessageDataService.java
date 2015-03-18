@@ -28,4 +28,9 @@ public interface MessageDataService extends MotechDataService<Message> {
     @Lookup
     List<Message> findMessagesByCampaignAndWeek(@LookupField(name = "campaignId") String campaign,
             @LookupField(name = "week") Integer week);
+    @Lookup
+    List<Message> findMessagesByCampaignAndWeekAndDay(
+            @LookupField(name = "campaignId") String campaign,
+            @LookupField(name = "week") Integer week,
+            @LookupField(name = "nyday") String nyday);
 }

@@ -152,8 +152,8 @@ public class RegistrationController {
             System.out.println(param + ": " + request.getParameter(param));
 
         }
-        System.out.println(String.format("Request Recieved /register?callerId=%s&language=%s&age=%s&gender=%s&educaitonalLevel=%s&channel=%s",
-                callerId, language, age, gender, educationLevel, channel));
+        System.out.println(String.format("Request Recieved /register?callerId=%s&language=%s&age=%s&gender=%s&educaitonalLevel=%s&channel=%s&location=%s&region=%s&source=%s",
+                callerId, language, age, gender, educationLevel, channel,loc,region,source));
         List<ValidationError> errors = new ArrayList<ValidationError>();
         RegistrationRequest registrationRequest = null;
         try {
@@ -255,8 +255,41 @@ public class RegistrationController {
     @RequestMapping(value = "/reset", method = RequestMethod.GET)
     public ResponseEntity<String> reset(HttpServletRequest request) {
         System.out.println("Reset camapings");
+/**
+ *  	Type
+	DAY_OF_WEEK
+	DAY_OF_WEEK
+	DAY_OF_WEEK
+	DAY_OF_WEEK
+	DAY_OF_WEEK
+	DAY_OF_WEEK
+	DAY_OF_WEEK
+	DAY_OF_WEEK
+	DAY_OF_WEEK
+	DAY_OF_WEEK
+	DAY_OF_WEEK
+	DAY_OF_WEEK
+	DAY_OF_WEEK
+	DAY_OF_WEEK
+	DAY_OF_WEEK
+	DAY_OF_WEEK
+	DAY_OF_WEEK
+	DAY_OF_WEEK
 
-        String[] userList = {"NYVRS SUNDAY IVR CAMPAIGN ITEM", "NYVRS KIKI IVR CAMPAIGN ITEM", "NYVRS RONALD IVR CAMPAIGN ITEM", "NYVRS RITA IVR CAMPAIGN ITEM", "NYVRS RITA SMS CAMPAIGN ITEM", "NYVRS KIKI SMS CAMPAIGN ITEM", "NYVRS RONALD SMS CAMPAIGN ITEM"};
+ */
+        String[] userList = {
+            "NYVRS SUNDAY IVR CAMPAIGN01",
+            "NYVRS GRAMEEEN SUNDAY IVR CAMPAIGN",
+            "NYVRS GRAMEEENs SUNDAY IVR CAMPAIGN",
+            "NYVRS GRAMEEEN TEST SUNDAY IVR CAMPAIGN",
+            "NYVRS GRAMEEEN TESTII SUNDAY IVR CAMPAIGN",
+            "NYVRS SUNDAY IVR CAMPAIGN ITEM", 
+            "NYVRS KIKI IVR CAMPAIGN ITEM", 
+            "NYVRS RONALD IVR CAMPAIGN ITEM", 
+            "NYVRS RITA IVR CAMPAIGN ITEM",
+            "NYVRS RITA SMS CAMPAIGN ITEM", 
+            "NYVRS KIKI SMS CAMPAIGN ITEM", 
+            "NYVRS RONALD SMS CAMPAIGN ITEM"};
 
         for (String string : userList) {
             try {

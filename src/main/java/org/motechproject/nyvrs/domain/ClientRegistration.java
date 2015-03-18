@@ -60,9 +60,14 @@ public class ClientRegistration extends MdsEntity {
     @Column(length = 11)
     @Field(defaultValue = "1")
     private Integer nyWeeks;
-
+    
+   
     @Field(required=true, name = "campaignid", type = "text")
     private CampaignType campaignType;
+    
+    @Column(length = 11)
+    @Field(defaultValue = "1")
+    private Integer sunWeeks;
 
     public ClientRegistration() {
     }

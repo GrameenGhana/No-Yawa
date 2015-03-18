@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
 import org.motechproject.nyvrs.web.NYVRSUtil;
 import org.motechproject.nyvrs.web.domain.Language;
@@ -58,30 +59,62 @@ public class MessageServiceImpl implements MessageService {
         if (client == null) {
             LOG.error("Could not find a client with caller id: " + callerId);
         } else {
-            String language = null == client.getLanguage() ? Language.ENGLISH.getValue() : client.getLanguage();
-            // e.g. Set1Day0Week03
-            String filename = String.format("Week%dStory%d", messageRequest.getWeek(), messageRequest.getWeek());
-            /**
-             * SetVar: filename=Week2Story2 SetVar: callerId=233277143521
-             * SetVar: language=ENGLISH CallerID: NY<0208799999>
-             */
-            String callContent = String.format("Channel: %s/%s\n"
-                    + "MaxRetries: %s\n"
-                    + "RetryTime: %s\n"
-                    + "Context: %s\n"
-                    + "Extension: s\n"
-                    + "SetVar: filename=%s\n"
-                    + "SetVar: callerId=%s\n"
-                    + "SetVar: language=%s"
-                    + "CallerID: NoYawa <NOYAWA>\n",
-                    sipName,
-                    "0" + callerId.substring(3).replaceAll(" ", ""),
-                    maxRetries,
-                    retryInterval,
-                    contextName, filename, callerId, language);
-            LOG.error(String.format("Playing File %s for %s", filename, "0" + callerId.substring(3)));
-            System.out.println((String.format("Playing File %s for %s", filename, "0" + callerId.substring(3))));
-//   String callContent = String.format("Channel: SIP/%s/%s\n" +
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(new Date());
+            if (cal.get(Calendar.HOUR_OF_DAY) < 20) {
+                String filename = messageRequest.getMsgFileName();
+                String language = (null == client.getLanguage()) ? Language.ENGLISH.getValue() : client.getLanguage();
+// e.g. Set1Day0Week03
+
+                /**
+                 * SetVar: filename=Week2Story2 SetVar: callerId=233277143521
+                 * SetVar: language=ENGLISH CallerID: NY<0208799999>
+                 */
+                //Just for the tempwork
+                String callContent = String.format("Channel: %s/%s\n"
+                        + "MaxRetries: %s\n"
+                        + "RetryTime: %s\n"
+                        + "Context: %s\n"
+                        + "Extension: s\n"
+                        + "SetVar: filename=%s\n"
+                        + "SetVar: callerId=%s\n"
+                        + "SetVar: language=%s\n"
+                        + "CallerID: NoYawa <NOYAWA>\n",
+                        sipName,
+                        "0" + callerId.substring(3).replaceAll(" ", ""),
+                        maxRetries,
+                        retryInterval,
+                        contextName, filename, callerId, language.toUpperCase());
+                LOG.error(String.format("Playing File %s for %s", filename, "0" + callerId.substring(3)));
+                System.out.println((String.format("Playing File %s for %s", filename, "0" + callerId.substring(3))));
+                if (schedulerService.isBusy()) {
+                    LOG.error(String.format("Scheduling call, callerId: %s", callerId));
+                    schedulerService.schedule(messageRequest);
+                } else {
+                    String callDir = settingsFacade.getProperty(SettingsDto.ASTERISK_CALL_DIR);
+                    File callFile = new File(callerId + ".call");
+                    try {
+                        LOG.error(String.format("Moving the call file to the outgoing directory (callerId: %s)", callerId));
+                        System.out.println(callContent);
+                        FileUtils.writeStringToFile(callFile, callContent);
+                        callFile.setReadable(true, false);
+                        callFile.setExecutable(true, false);
+                        callFile.setWritable(true, false);
+                        callFile.setLastModified(new Date().getTime());
+                        File callFileDest = new File(callDir, callerId + ".call");
+//                  FileUtils.copyFile(callFile, new File("/var/spool/asterisk/",callerId+".call"));
+                        FileUtils.moveFile(callFile, callFileDest);
+                        messageRequest.setStatus(MessageRequestStatus.IN_PROGRESS);
+                        messageRequestService.update(messageRequest);
+//                  client.setNyWeeks(client.getNyWeeks()+1);
+//                  clientRegistrationService.update(client);
+                        return true;
+                    } catch (Exception ioe) {
+                        LOG.error("Error while saving the call file:\n" + ioe.getMessage());
+                    }
+                }
+            }
+            //   String callContent = String.format("Channel: SIP/%s/%s\n" +
 //                    "MaxRetries: %s\n" +
 //                    "RetryTime: %s\n" +
 //                    "Context: %s\n" +
@@ -90,32 +123,6 @@ public class MessageServiceImpl implements MessageService {
 //                    "SetVar: filename=%s\n" +
 //                    "SetVar: callerId=%s\n", sipName, callerId, maxRetries, retryInterval, contextName, language, filename, callerId);
 
-            if (schedulerService.isBusy()) {
-                LOG.error(String.format("Scheduling call, callerId: %s", callerId));
-                schedulerService.schedule(messageRequest);
-            } else {
-                String callDir = settingsFacade.getProperty(SettingsDto.ASTERISK_CALL_DIR);
-                File callFile = new File(callerId + ".call");
-                try {
-                    LOG.error(String.format("Moving the call file to the outgoing directory (callerId: %s)", callerId));
-                    System.out.println(callContent);
-                    FileUtils.writeStringToFile(callFile, callContent);
-                    callFile.setReadable(true, false);
-                    callFile.setExecutable(true, false);
-                    callFile.setWritable(true, false);
-                    callFile.setLastModified(new Date().getTime());
-                    File callFileDest = new File(callDir, callerId + ".call");
-//                    FileUtils.copyFile(callFile, new File("/var/spool/asterisk/",callerId+".call"));
-                    FileUtils.moveFile(callFile, callFileDest);
-                    messageRequest.setStatus(MessageRequestStatus.IN_PROGRESS);
-                    messageRequestService.update(messageRequest);
-//                    client.setNyWeeks(client.getNyWeeks()+1);
-//                    clientRegistrationService.update(client);
-                    return true;
-                } catch (Exception ioe) {
-                    LOG.error("Error while saving the call file:\n" + ioe.getMessage());
-                }
-            }
         }
         return false;
     }

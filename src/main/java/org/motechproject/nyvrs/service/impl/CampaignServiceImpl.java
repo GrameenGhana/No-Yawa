@@ -6,6 +6,7 @@ import java.util.List;
 import org.joda.time.LocalDate;
 import org.motechproject.messagecampaign.contract.CampaignRequest;
 import org.motechproject.messagecampaign.loader.CampaignJsonLoader;
+import org.motechproject.messagecampaign.service.CampaignEnrollmentsQuery;
 import org.motechproject.messagecampaign.service.MessageCampaignService;
 import org.motechproject.messagecampaign.userspecified.CampaignRecord;
 import org.motechproject.nyvrs.domain.CampaignType;
@@ -167,6 +168,21 @@ public class CampaignServiceImpl implements CampaignService {
 
     @Override
     public void deleteCampaign(String campaign) {
-        messageCampaignService.deleteCampaign(campaign);
+        try {
+            System.out.println("Stop all for " + campaign);
+            messageCampaignService.stopAll(new CampaignEnrollmentsQuery().withCampaignName(campaign));
+        } catch (Exception e) {
+            System.out.println("Error Stopping all for " + campaign + " : due to " + e.getLocalizedMessage());
+        }
+        try {
+            System.out.println("Deletion  for " + campaign);
+            messageCampaignService.deleteCampaign(campaign);
+
+            System.out.println("End Deletion for " + campaign);
+        } catch (Exception e) {
+                System.out.println("Error ddssddccszduysd all for " + campaign + " : due to " + e.getLocalizedMessage());
+       
+        }
+
     }
 }

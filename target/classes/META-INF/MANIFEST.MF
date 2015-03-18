@@ -8,14 +8,15 @@ Export-Package: org.motechproject.nyvrs.service;uses:="org.motechproje
  rvice,org.motechproject.nyvrs.domain";version="0.1.0.SNAPSHOT",org.mo
  techproject.nyvrs.web;uses:="org.springframework.http,org.motechproje
  ct.nyvrs.service,javax.servlet.http,org.springframework.beans.factory
- .annotation,org.springframework.web.bind.annotation,org.motechproject
- .nyvrs.domain,org.springframework.stereotype,org.slf4j,org.apache.com
- mons.lang,org.motechproject.server.config,org.apache.commons.io,org.o
+ .annotation,org.motechproject.nyvrs.domain,org.slf4j,org.motechprojec
+ t.server.config,org.apache.commons.lang,org.springframework.web.bind.
+ annotation,org.springframework.stereotype,org.apache.commons.io,org.o
  sgi.framework";version="0.1.0.SNAPSHOT",org.motechproject.nyvrs.event
- ;uses:="org.motechproject.event,org.motechproject.event.listener.anno
- tations,org.springframework.beans.factory.annotation,org.motechprojec
- t.nyvrs.service,org.motechproject.nyvrs.domain,org.springframework.st
- ereotype,org.slf4j";version="0.1.0.SNAPSHOT"
+ ;uses:="org.motechproject.event,org.motechproject.nyvrs.service,org.m
+ otechproject.nyvrs.web,org.motechproject.event.listener.annotations,o
+ rg.springframework.beans.factory.annotation,org.motechproject.nyvrs.d
+ omain,org.springframework.stereotype,org.slf4j";version="0.1.0.SNAPSH
+ OT"
 Blueprint-Enabled: true
 Built-By: seth
 Tool: Bnd-1.43.0
@@ -25,7 +26,7 @@ Build-Jdk: 1.7.0_67
 Resource-Path: nyvrs/resources
 Bundle-Version: 0.1.0.SNAPSHOT
 Context-Path: nyvrs
-Bnd-LastModified: 1421418730007
+Bnd-LastModified: 1425894344288
 Bundle-ManifestVersion: 2
 Import-Package: javax.jdo.annotations;version="[3.0,4)",javax.servlet.
  http;version="[2.5,3)",org.apache.commons.io;version="[1.4,2)",org.ap

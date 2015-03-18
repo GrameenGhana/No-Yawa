@@ -29,6 +29,7 @@ public class NYVRSUtil {
             if (day == 0) {
                 return String.format("Week%dStory%d", client.getNyWeeks(), client.getNyWeeks());
             } else if (day > 0) {
+                day--;
                 return (String.format("%sDay%dWeek%02d", client.getCampaignType().getValue(), day, client.getNyWeeks()));
             }
         }

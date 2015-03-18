@@ -43,7 +43,9 @@ public class SchedulerServiceImpl implements SchedulerService {
 
     @Override
     public synchronized void handleScheduledRequests() {
+        System.out.println("To run : ");
         List<MessageRequest> scheduledRequests = messageRequestService.findScheduledRequests();
+        System.out.println("Sche : "+scheduledRequests.size());
         if (scheduledRequests.size() > 0) {
             Integer callsToHandle = Integer.valueOf(settingsFacade.getProperty(SettingsDto.ASTERISK_MAX_CALLS)) - getCurrentCallCount();
             for(int i = 0; i < scheduledRequests.size() && i <= callsToHandle; i++) {

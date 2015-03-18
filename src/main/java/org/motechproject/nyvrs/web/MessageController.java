@@ -65,6 +65,12 @@ public class MessageController {
         ClientRegistration clientRegistration = clientRegistrationService.findClientRegistrationByNumber(callerId);
         MessageRequest messageRequest = messageRequestService.findActiveMessageRequestByCallerId(callerId);
         if (clientRegistration == null || messageRequest == null) {
+            System.out.println("Runnung Runnable");
+            new Thread(new Runnable() {
+                public void run() {
+                    schedulerService.handleScheduledRequests();
+                }
+            }).start();
             return new ResponseEntity<String>("Could not find message request for the given callerId.", HttpStatus.OK);
         }
 
@@ -82,7 +88,7 @@ public class MessageController {
             }
             messageRequestService.update(messageRequest);
         }
-
+        System.out.println("Runnung Runnable");
         new Thread(new Runnable() {
             public void run() {
                 schedulerService.handleScheduledRequests();

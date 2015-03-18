@@ -37,19 +37,22 @@ public class CampaignAssignment {
         System.out.println("doAssignment");
         CampaignType[] types = {CampaignType.RONALD};
         String output = "%s Week %d Age %d %s Size %d";
+        
+        
         for (CampaignType campaignType : CampaignType.values()) {
-            //Weeks of subscribers
-            for (Integer wk = 24; wk <= 24; wk++) {
+           
+//            //Weeks of subscribers
+            for (Integer wk = 1; wk <= 26; wk++) {
                 //Valid age range 15-24
-                for (Integer age = 18; age <= 19; age++) {
+                for (Integer age = 15; age <= 24; age++) {
                     clients = clientRegistrationService.findByCampaignStatusWeekAge(campaignType, StatusType.Completed, wk, age);
                     int tt = 0;
-                    if (age == 18) {
-                        tt = clients.size();
-                        System.out.println("Client Length :" + tt);
-                        if(tt>1928)
-                        clients = clients.subList(1928, clients.size());
-                    }
+//                    if (age == 18) {
+//                        tt = clients.size();
+//                        System.out.println("Client Length :" + tt);
+//                        if(tt>1928)
+//                        clients = clients.subList(1928, clients.size());
+//                    }
                      tt = clients.size();
                     System.out.println(String.format(output, campaignType, wk, age, "", tt));
                     int cnt = 0;
@@ -86,6 +89,6 @@ public class CampaignAssignment {
                 }
             }
         }
-    }
+    }}
 
-}
+
